@@ -1,4 +1,4 @@
-import { useState, createContext, useContext, useEffect } from 'react';
+import { useState, createContext, useContext, useEffect, ReactNode } from 'react';
 import { useAccordion } from '..';
 
 import { Container } from './style';
@@ -11,6 +11,7 @@ interface ContextData {
 const Context = createContext<ContextData>({} as ContextData);
 
 export interface AccordionItemProps {
+  children: ReactNode;
   itemKey: string;
 }
 
@@ -20,7 +21,7 @@ export const AccordionItem: React.FC<AccordionItemProps> = ({ children, itemKey 
 
   useEffect(() => {
     setIsOpened(currentItemKey === itemKey);
-  }, [currentItemKey]);
+  }, [currentItemKey, itemKey]);
 
   return (
     <Context.Provider value={{ isOpened, itemKey }}>

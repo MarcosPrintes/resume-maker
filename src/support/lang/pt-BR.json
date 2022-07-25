@@ -1,6 +1,8 @@
 {
+  "global.defaultResumeName": "Currículo 1",
   "global.add": "Adicionar",
   "global.update": "Atualizar",
+  "global.remove": "Remover",
   "global.add.value": "Adicionar {value}",
   "global.close": "Fechar",
   "global.profile": "Perfil",
@@ -27,6 +29,8 @@
   "global.startDate": "Data de Início",
   "global.endDate": "Data de Término",
   "global.present": "Atualmente",
+  "global.name": "Nome",
+  "global.create": "Criar",
   "sidebar.form.heading.name": "Nome",
   "sidebar.form.heading.title": "Título",
   "sidebar.form.heading.birthDate": "Data de Nascimento",
@@ -78,5 +82,13 @@
   "sidebar.crudList.emptyMessage": "{gender, select, male {Nenhum {name} adicionado.} female {Nenhuma {name} adicionada.} other {teste}}",
   "header.button.print.text": "Imprimir",
   "header.button.download.text": "Baixar PDF",
-  "validation.required": "Campo obrigatório"
+  "header.button.github.text": "Repositório no GitHub",
+  "header.addForm.newResume": "Novo Currículo",
+  "header.addForm.import": "Importar dados de outro currículo?",
+  "header.addForm.selectPlaceholder": "Selecione um currículo",
+  "header.editForm.title": "Editar Currículo",
+  "validation.required": "Campo obrigatório",
+  "resume.removeDialog.title": "Opa!",
+  "resume.removeDialog.tooltip": "Remover Currículo",
+  "resume.removeDialog.text": "Tem certeza que deseja remover o currículo {resumeName}?"
  }

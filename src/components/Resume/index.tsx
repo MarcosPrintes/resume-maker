@@ -1,6 +1,9 @@
 import Default from '@/components/templates/default';
+import ResumesDropdown from './ResumesDropdown';
+import EditForm from './EditForm';
+import RemoveDialog from './RemoveDialog';
 
-import { Container } from './styles';
+import { Container, ResumeHeader } from './styles';
 
 const templates = {
   default: Default,
@@ -13,6 +16,12 @@ const Resume: React.FC = () => {
 
   return (
     <Container>
+      <ResumeHeader>
+        <ResumesDropdown />
+        <EditForm />
+        <RemoveDialog />
+      </ResumeHeader>
+
       <Template />
     </Container>
   );

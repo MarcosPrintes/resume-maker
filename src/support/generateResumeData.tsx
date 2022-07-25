@@ -1,12 +1,13 @@
+import { ResumeData } from '@/entities';
 import faker from 'faker';
 import { v4 as uuid } from 'uuid';
-import { ResumeData } from '@/contexts/Resume';
 
 export function generateResumeData(type: 'empty' | 'fake'): ResumeData {
   return type === 'fake'
     ? {
         id: uuid(),
         isActive: true,
+        resumeName: '',
         name: `${faker.name.firstName()} ${faker.name.lastName()}`,
         title: faker.name.jobTitle(),
         birthDate: faker.date.past().toLocaleDateString(),
@@ -71,6 +72,7 @@ export function generateResumeData(type: 'empty' | 'fake'): ResumeData {
     : {
         id: uuid(),
         isActive: true,
+        resumeName: '',
         name: '',
         title: '',
         birthDate: '',

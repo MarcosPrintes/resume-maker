@@ -1,8 +1,10 @@
-import { useState, DragEvent, useRef } from 'react';
+import { useState, DragEvent, useRef, ReactNode } from 'react';
 import { useList } from '..';
 import { Container } from './styles';
 
-export interface ListItemProps {}
+export interface ListItemProps {
+  children: ReactNode;
+}
 
 export const ListItem: React.FC<ListItemProps> = ({ children }) => {
   const containerRef = useRef<HTMLLIElement>(null);
@@ -15,7 +17,8 @@ export const ListItem: React.FC<ListItemProps> = ({ children }) => {
       (node) => node === containerRef.current!,
     );
 
-  const handleDragStart = () => {
+  const handleDragStart = (e: DragEvent) => {
+    e.dataTransfer.effectAllowed = 'move';
     setIsDragging(true);
     setCurrentIndex(getItemIndex());
   };

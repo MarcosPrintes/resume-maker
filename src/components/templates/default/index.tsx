@@ -1,32 +1,22 @@
 import { ReactElement } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { useResume } from '@/contexts/Resume';
-import {
-  FiChevronLeft,
-  FiFacebook,
-  FiGithub,
-  FiGlobe,
-  FiInstagram,
-  FiLinkedin,
-  FiMail,
-  FiMapPin,
-  FiPhone,
-  FiTwitter,
-  FiYoutube,
-} from 'react-icons/fi';
+import * as Icons from 'react-icons/fi';
 import { IconType } from 'react-icons/lib';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { useResume } from '@/contexts/Resume';
 
-import { Sheet, Header, Body, Title, Section, Experience, SummaryContent } from './styles';
+import { S } from './styles';
+import { Sheet } from '../Sheet';
 
 const networksIcons: Record<string, IconType> = {
-  facebook: FiFacebook,
-  instagram: FiInstagram,
-  twitter: FiTwitter,
-  github: FiGithub,
-  linkedin: FiLinkedin,
-  youtube: FiYoutube,
-  other: FiChevronLeft,
+  facebook: Icons.FiFacebook,
+  instagram: Icons.FiInstagram,
+  twitter: Icons.FiTwitter,
+  github: Icons.FiGithub,
+  linkedin: Icons.FiLinkedin,
+  youtube: Icons.FiYoutube,
+  dribbble: Icons.FiDribbble,
+  other: Icons.FiChevronLeft,
 };
 
 const renderNetworkIcon = (network: string): ReactElement => {
@@ -41,15 +31,16 @@ const renderNetworkIcon = (network: string): ReactElement => {
 
 const Default: React.FC = () => {
   const intl = useIntl();
-  const { state } = useResume();
+  const { activeResume } = useResume();
   const hasContactSection =
-    !!state.address ||
-    !!state.city ||
-    !!state.zipCode ||
-    !!state.website ||
-    state.socialNetworks.length > 0;
+    !!activeResume.phoneNumber ||
+    !!activeResume.address ||
+    !!activeResume.city ||
+    !!activeResume.zipCode ||
+    !!activeResume.website ||
+    activeResume.socialNetworks.length > 0;
 
-  const adjustDate = (date: string): string => {
+  const toShortDate = (date: string): string => {
     const formattedDate = intl.formatDate(new Date(date), {
       month: 'short',
       year: 'numeric',
@@ -60,51 +51,52 @@ const Default: React.FC = () => {
 
   return (
     <Sheet className="sheet">
-      <Header>
+      <S.Header>
         <div className="title">
-          {state.name && <h1>{state.name}</h1>}
-          {state.title && <p>{state.title}</p>}
+          {activeResume.name && <h1>{activeResume.name}</h1>}
+          {activeResume.title && <p>{activeResume.title}</p>}
         </div>
-      </Header>
+      </S.Header>
 
-      <Body>
+      <S.Body>
         <aside>
           {hasContactSection && (
-            <Section>
-              <Title>
+            <S.Section>
+              <S.Title>
                 <FormattedMessage id="global.contact" />
-              </Title>
+              </S.Title>
               <ul>
-                {(!!state.address || !!state.city) && (
+                {(activeResume.address || activeResume.city || activeResume.zipCode) && (
                   <li>
-                    {state.address} {state.city} {state.zipCode} <FiMapPin size={16} />
+                    {activeResume.address} {activeResume.city} {activeResume.zipCode}
+                    <Icons.FiMapPin size={16} />
                   </li>
                 )}
-                {state.phoneNumber && (
+                {activeResume.phoneNumber && (
                   <li>
-                    <a href={`tel:${state.phoneNumber}`} target="_blank" rel="noreferrer">
-                      {state.phoneNumber}
+                    <a href={`tel:${activeResume.phoneNumber}`} target="_blank" rel="noreferrer">
+                      {activeResume.phoneNumber}
                     </a>
-                    <FiPhone size={16} />
+                    <Icons.FiPhone size={16} />
                   </li>
                 )}
-                {state.email && (
+                {activeResume.email && (
                   <li>
-                    <a href={`mailto:${state.email}`} target="_blank" rel="noreferrer">
-                      {state.email}
+                    <a href={`mailto:${activeResume.email}`} target="_blank" rel="noreferrer">
+                      {activeResume.email}
                     </a>
-                    <FiMail size={16} />
+                    <Icons.FiMail size={16} />
                   </li>
                 )}
-                {state.website && (
+                {activeResume.website && (
                   <li>
-                    <a href={state.website} target="_blank" rel="noreferrer">
-                      {state.website}
+                    <a href={activeResume.website} target="_blank" rel="noreferrer">
+                      {activeResume.website}
                     </a>
-                    <FiGlobe size={16} />
+                    <Icons.FiGlobe size={16} />
                   </li>
                 )}
-                {state.socialNetworks.map((network) => (
+                {activeResume.socialNetworks.map((network) => (
                   <li key={network.id}>
                     <a className="link" href={network.url} target="_blank" rel="noreferrer">
                       {network.name}
@@ -113,14 +105,14 @@ const Default: React.FC = () => {
                   </li>
                 ))}
               </ul>
-            </Section>
+            </S.Section>
           )}
-          {state.education.length > 0 && (
-            <Section>
-              <Title>
+          {activeResume.education.length > 0 && (
+            <S.Section>
+              <S.Title>
                 <FormattedMessage id="global.education" />
-              </Title>
-              {state.education.map((education) => (
+              </S.Title>
+              {activeResume.education.map((education) => (
                 <ul key={education.id}>
                   <li>
                     <strong>{education.typeOfDegree}</strong>
@@ -130,9 +122,9 @@ const Default: React.FC = () => {
                   </li>
                   <li>{education.institution}</li>
                   <li>
-                    {adjustDate(education.startDate)} -{' '}
+                    {toShortDate(education.startDate)} -{' '}
                     {education.endDate ? (
-                      adjustDate(education.endDate)
+                      toShortDate(education.endDate)
                     ) : (
                       <FormattedMessage id="global.present" />
                     )}
@@ -140,16 +132,16 @@ const Default: React.FC = () => {
                   {education.summary && <li>{education.summary}</li>}
                 </ul>
               ))}
-            </Section>
+            </S.Section>
           )}
 
-          {state.skills.length > 0 && (
-            <Section>
-              <Title>
+          {activeResume.skills.length > 0 && (
+            <S.Section>
+              <S.Title>
                 <FormattedMessage id="global.skills" />
-              </Title>
+              </S.Title>
               <ul>
-                {state.skills.map((skill) => (
+                {activeResume.skills.map((skill) => (
                   <li key={skill.id}>
                     {!!skill.level && (
                       <>
@@ -160,72 +152,72 @@ const Default: React.FC = () => {
                   </li>
                 ))}
               </ul>
-            </Section>
+            </S.Section>
           )}
 
-          {state.languages.length > 0 && (
-            <Section>
-              <Title>
+          {activeResume.languages.length > 0 && (
+            <S.Section>
+              <S.Title>
                 <FormattedMessage id="global.languages" />
-              </Title>
+              </S.Title>
               <ul>
-                {state.languages.map((language) => (
+                {activeResume.languages.map((language) => (
                   <li key={language.id}>
                     {language.name} - {language.fluency}
                   </li>
                 ))}
               </ul>
-            </Section>
+            </S.Section>
           )}
 
-          {state.certifications.length > 0 && (
-            <Section>
-              <Title>
+          {activeResume.certifications.length > 0 && (
+            <S.Section>
+              <S.Title>
                 <FormattedMessage id="global.certifications" />
-              </Title>
-              {state.certifications.map((certification) => (
-                <ul>
+              </S.Title>
+              {activeResume.certifications.map((certification) => (
+                <ul key={certification.id}>
                   <li key={certification.id}>
                     <strong>{certification.title}</strong>
                   </li>
                   <li>
-                    {certification.issuer} - {adjustDate(certification.date)}
+                    {certification.issuer} - {toShortDate(certification.date)}
                   </li>
                 </ul>
               ))}
-            </Section>
+            </S.Section>
           )}
         </aside>
 
         <div>
-          {!!state.objectiveSummary && (
-            <Section>
-              <Title>
+          {!!activeResume.objectiveSummary && (
+            <S.Section>
+              <S.Title>
                 <FormattedMessage id="global.objective" />
-              </Title>
-              {state.objectiveSummary && (
-                <SummaryContent>
-                  <ReactMarkdown>{state.objectiveSummary}</ReactMarkdown>
-                </SummaryContent>
+              </S.Title>
+              {activeResume.objectiveSummary && (
+                <S.SummaryContent>
+                  <ReactMarkdown>{activeResume.objectiveSummary}</ReactMarkdown>
+                </S.SummaryContent>
               )}
-            </Section>
+            </S.Section>
           )}
 
-          {state.workExperience.length > 0 && (
-            <Section>
-              <Title>
+          {activeResume.workExperience.length > 0 && (
+            <S.Section>
+              <S.Title>
                 <FormattedMessage id="global.experience" />
-              </Title>
+              </S.Title>
 
-              {state.workExperience.map((experience) => (
-                <Experience key={experience.id}>
+              {activeResume.workExperience.map((experience) => (
+                <S.Experience key={experience.id}>
                   <h2>{experience.position}</h2>
                   <div className="details">
                     <span>{experience.company}</span>
                     <span>
-                      {adjustDate(experience.startDate)} -{' '}
+                      {toShortDate(experience.startDate)} -{' '}
                       {experience.endDate ? (
-                        adjustDate(experience.endDate)
+                        toShortDate(experience.endDate)
                       ) : (
                         <FormattedMessage id="global.present" />
                       )}
@@ -233,22 +225,22 @@ const Default: React.FC = () => {
                     {experience.website && (
                       <span>
                         <a href={experience.website} target="_blank" rel="noreferrer">
-                          <FiGlobe size={16} />
+                          <Icons.FiExternalLink size={16} />
                         </a>
                       </span>
                     )}
                   </div>
                   {experience.summary && (
-                    <SummaryContent>
+                    <S.SummaryContent>
                       <ReactMarkdown>{experience.summary}</ReactMarkdown>
-                    </SummaryContent>
+                    </S.SummaryContent>
                   )}
-                </Experience>
+                </S.Experience>
               ))}
-            </Section>
+            </S.Section>
           )}
         </div>
-      </Body>
+      </S.Body>
     </Sheet>
   );
 };
